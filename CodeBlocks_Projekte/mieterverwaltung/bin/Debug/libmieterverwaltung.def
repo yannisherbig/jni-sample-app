@@ -1,0 +1,5 @@
+EXPORTS
+    Java_BasisControl_berechneKautionsKosten @1
+    Java_BasisControl_berechneMieteinnahmenGesamtInEuro @2
+    Java_BasisControl_holeStromzaehlerStandInKWh @3
+    Java_BasisControl_holeWasserverbrauchInKubikM @4
