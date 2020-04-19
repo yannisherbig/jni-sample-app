@@ -1,5 +1,7 @@
 EXPORTS
-    Java_BasisControl_berechneKautionsKosten @1
-    Java_BasisControl_berechneMieteinnahmenGesamtInEuro @2
-    Java_BasisControl_holeStromzaehlerStandInKWh @3
-    Java_BasisControl_holeWasserverbrauchInKubikM @4
+    Java_application_MainController_berechneKautionsKosten @1
+    Java_application_MainController_berechneMieteinnahmenGesamtInEuro @2
+    Java_application_MainController_erstelleMieterObjekt @3
+    Java_application_MainController_erstelleMietobjektObjekt @4
+    Java_application_MainController_holeAktuellenStromverbrauchInKWh @5
+    Java_application_MainController_holeAktuellenWasserverbrauchInKubikM @6

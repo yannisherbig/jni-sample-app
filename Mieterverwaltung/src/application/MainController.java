@@ -90,7 +90,7 @@ public class MainController implements Initializable {
 	public ObservableList<Mieter> mieterListe;
 	public ObservableList<Mietobjekt> mietobjektListe;
 	
-	private AtomicInteger tick = new AtomicInteger(0);
+	private AtomicInteger tick = new AtomicInteger(0);  // Counter, representing the time in the X-Axis of LineChart
 	
 	@FXML
 	public void processNewMieter(ActionEvent event) {
@@ -106,8 +106,10 @@ public class MainController implements Initializable {
 			if(m == null) 
 				throw new Exception("Das angegebene Mietobjekt existiert nicht!");
 			long generatedMieterID = repo.insertIntoMieter(name, vorname, alter, telefonnummer, mietobjektID);
-			// Hier kann man eventuell einen nativen-Ausruf starten, bei dem die Instanziierung des Mieter-Objektes in C stattfindet
-			mieterListe.add(new Mieter(generatedMieterID, name, vorname, alter, telefonnummer, mietobjektID));
+			
+			// Nativer Aufruf:
+			Mieter neuerMieter = erstelleMieterObjekt(generatedMieterID, name, vorname, alter, telefonnummer, mietobjektID);
+			mieterListe.add(neuerMieter);
 		} catch (Exception e) {
 			new Alert(AlertType.WARNING, 
                     "Mieter-Erstellung fehlgeschlagen: " + e.getMessage(), 
@@ -125,11 +127,19 @@ public class MainController implements Initializable {
 			if(lage.equals("") || flaecheInQuadratmetern < 0 || baujahr < 0)
 				throw new Exception("Ungültige Eingaben");
 			long generatedMietobjektID = repo.insertIntoMietobjekt(flaecheInQuadratmetern, monatsmieteInEuro, baujahr, lage);
-			mietobjektListe.add(new Mietobjekt(generatedMietobjektID, flaecheInQuadratmetern, monatsmieteInEuro, baujahr, lage));
+			
+			// Nativer Aufruf mit Callback-Funktion:
+			erstelleMietobjektObjekt(generatedMietobjektID, flaecheInQuadratmetern, monatsmieteInEuro, baujahr, lage, "afterMietobjektCreationCallback");
+			System.out.println("Who's quicker?");
 		} catch (Exception e) {
-			new Alert(AlertType.WARNING, "Mietobjekt-Erstellung fehlgeschlagen: " + e.getMessage(), ButtonType.OK).show();;
+			new Alert(AlertType.WARNING, "Mietobjekt-Erstellung fehlgeschlagen: " + e.getMessage(), ButtonType.OK).show();
 			System.out.println(e.getMessage());
 		}
+	}
+	
+	// Callback-Method
+	private void afterMietobjektCreationCallback(Mietobjekt m) {
+		mietobjektListe.add(m);
 	}
 	
 	@FXML
@@ -170,25 +180,28 @@ public class MainController implements Initializable {
 		System.out.println("Who's quicker?"); // Dies sollte nach vor der Ausgabe des Ergebnis des native-Aufruf in der Konsole erscheinen
 	}
 	
+	// Callback-Method
 	private void gesamteMieteinnahmenCallback(double einnahmen) {
 		System.out.println("Einnahmen: " + einnahmen);
-		gesamteMieteinnahmenLabel.setText(Double.toString(einnahmen));
+		gesamteMieteinnahmenLabel.setText(Double.toString(einnahmen) + "€");
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void onComboBoxChange() {
 		lineChart.getData().clear();
 		XYChart.Series<Number, Number> stromverbrauchSeries = new XYChart.Series<>();
+		stromverbrauchSeries.setName("Stromverbrauch");
 		XYChart.Series<Number, Number> wasserverbrauchSeries = new XYChart.Series<>();
+		wasserverbrauchSeries.setName("Wasserverbrauch");
 		lineChart.getData().addAll(stromverbrauchSeries, wasserverbrauchSeries);
 		Thread updateThread = new Thread(() -> {
 	      while (true) {
 	        try {
 	          Thread.sleep(1000);
 	          Platform.runLater(() -> stromverbrauchSeries.getData()
-	        		  .add(new XYChart.Data<>(tick.incrementAndGet(), (int) (Math.random() * 100)))); // Math.random() soll durch native-Methodenaufruf ersetzt werden
+	        		  .add(new XYChart.Data<>(tick.incrementAndGet(), holeAktuellenStromverbrauchInKWh())));
 	          Platform.runLater(() -> wasserverbrauchSeries.getData()
-	        		  .add(new XYChart.Data<>(tick.incrementAndGet(), (int) (Math.random() * 100)))); // Math.random() soll durch native-Methodenaufruf ersetzt werden
+	        		  .add(new XYChart.Data<>(tick.incrementAndGet(), holeAktuellenWasserverbrauchInKubikM())));
 	        } catch (InterruptedException e) {
 	          throw new RuntimeException(e);
 	        }
@@ -200,16 +213,22 @@ public class MainController implements Initializable {
 	
 	
 	private native float berechneKautionsKosten();
-	private native double holeStromzaehlerStandInKWh();
-	private native double holeWasserverbrauchInKubikM();
+	
+	private native double holeAktuellenStromverbrauchInKWh();
+	
+	private native double holeAktuellenWasserverbrauchInKubikM();
+	
 	private native void berechneMieteinnahmenGesamtInEuro(double[] mietenArr, String callbackMethodName);
+	
+	private native Mieter erstelleMieterObjekt(long mieterID, String name, String vorname, int alter, int telefonnummer, long mietobjektIDFK);
+	
+	private native void erstelleMietobjektObjekt(long mietobjektID, int flaecheInQuadratmetern, 
+			double monatsmieteInEuro, int baujahr, String lage, String callbackMethodName);
+	
 	
 	public MainController() {
 		this.repo = CRUDRepository.getInstance();
-//		// Testing out JNI and DB:
-//		System.out.println(test());
-//		System.out.println(holeStromzaehlerStandInKWh());
-//		berechneMieteinnahmenGesamtInEuro(new int[] {3,2,1}, "gesamteMieteinnahmenCallback");
+		System.out.println("Kautionskosten: " + berechneKautionsKosten());
 	}
 	
 	public float test() {

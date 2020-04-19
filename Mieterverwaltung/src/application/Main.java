@@ -17,6 +17,7 @@ public class Main extends Application {
 	
 	@Override
 	public void stop(){
+		System.out.println("Stopped");
 	    try {
 			DBSingletonConnection.getConnection().close();
 		} catch (Exception e) { 

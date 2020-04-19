@@ -114,15 +114,6 @@ public class CRUDRepository {
         pstmt.setLong(1, mieterID);
         pstmt.executeUpdate();
 	}
-		
-//	public void selectAlleMieterTest() throws SQLException{	       
-//		Connection conn = connect();
-//        Statement stmt  = conn.createStatement();
-//        ResultSet rs    = stmt.executeQuery(selectAlleMieterSQL);      
-//	    while (rs.next()) {
-//	    	System.out.println(rs.getString("name"));
-//	    }
-//    }
 	
 	public ObservableList<Mieter> selectAlleMieter() throws SQLException{ 
 		ObservableList<Mieter> mieterListe = FXCollections.observableArrayList();

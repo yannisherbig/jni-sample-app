@@ -82,12 +82,15 @@
                                  <center>
                                     <TableView fx:id="mietobjektTabelle" prefHeight="368.0" prefWidth="477.0" BorderPane.alignment="CENTER">
                                        <columns>
-                                          <TableColumn fx:id="mietobjektID" prefWidth="94.0" text="Mietobjekte-ID" />
-                                          <TableColumn fx:id="flaecheInQuadratmetern" prefWidth="100.0" text="Fläche in m²" />
-                                          <TableColumn fx:id="monatsmieteInEuro" prefWidth="125.0" text="Monatsmiete in €" />
-                                          <TableColumn fx:id="baujahr" prefWidth="52.0" text="Baujahr" />
-                                          <TableColumn fx:id="lage" prefWidth="105.0" text="Lage" />
+                                          <TableColumn fx:id="mietobjektID" prefWidth="92.0" text="Mietobjekte-ID" />
+                                          <TableColumn fx:id="flaecheInQuadratmetern" prefWidth="85.0" text="Fläche in m²" />
+                                          <TableColumn fx:id="monatsmieteInEuro" prefWidth="112.0" text="Monatsmiete in €" />
+                                          <TableColumn fx:id="baujahr" prefWidth="63.0" text="Baujahr" />
+                                          <TableColumn fx:id="lage" prefWidth="183.0" text="Lage" />
                                        </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
                                     </TableView>
                                  </center>
                                  <padding>
@@ -119,7 +122,11 @@
                                                 <Image url="@../img/haus-logo.png" />
                                              </image>
                                           </ImageView>
-                                          <Label fx:id="softwareLabelCopy" prefHeight="43.0" prefWidth="152.0" text="Die Mieterverwaltung" />
+                                          <Label fx:id="softwareLabelCopy" prefHeight="43.0" prefWidth="152.0" text="Die Mieterverwaltung">
+                                             <HBox.margin>
+                                                <Insets top="10.0" />
+                                             </HBox.margin>
+                                          </Label>
                                        </children>
                                        <padding>
                                           <Insets top="25.0" />
@@ -146,12 +153,15 @@
                                     <TableView fx:id="mieterTabelle" prefHeight="368.0" prefWidth="300.0" BorderPane.alignment="CENTER">
                                       <columns>
                                         <TableColumn fx:id="mieterID" prefWidth="64.0" text="Mieter-ID" />
-                                        <TableColumn fx:id="name" prefWidth="120.0" text="Name" />
-                                          <TableColumn fx:id="vorname" prefWidth="126.0" text="Vorname" />
-                                          <TableColumn fx:id="alter" prefWidth="68.0" text="Alter" />
-                                          <TableColumn fx:id="telefonnummer" prefWidth="157.0" text="Telefon-Nr." />
-                                          <TableColumn fx:id="mietobjektIDFK" prefWidth="91.0" text="Mietobjekt-ID" />
+                                        <TableColumn fx:id="name" prefWidth="103.0" text="Name" />
+                                          <TableColumn fx:id="vorname" prefWidth="109.0" text="Vorname" />
+                                          <TableColumn fx:id="alter" prefWidth="60.0" text="Alter" />
+                                          <TableColumn fx:id="telefonnummer" prefWidth="115.0" text="Telefon-Nr." />
+                                          <TableColumn fx:id="mietobjektIDFK" prefWidth="84.0" text="Mietobjekt-ID" />
                                       </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
                                     </TableView>
                                  </center>
                                  <bottom>
@@ -176,23 +186,23 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <SplitPane dividerPositions="0.4465478841870824" layoutX="-2.0" prefHeight="471.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <SplitPane dividerPositions="0.3" layoutX="-2.0" prefHeight="471.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
                               <BorderPane prefHeight="469.0" prefWidth="398.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <center>
-                                    <Label fx:id="gesamteMieteinnahmenLabel" alignment="CENTER" prefHeight="67.0" prefWidth="153.0" BorderPane.alignment="CENTER">
+                                    <Label fx:id="gesamteMieteinnahmenLabel" alignment="CENTER" prefHeight="67.0" prefWidth="153.0" BorderPane.alignment="TOP_CENTER">
                                        <font>
                                           <Font size="24.0" />
                                        </font>
                                        <BorderPane.margin>
-                                          <Insets bottom="30.0" left="30.0" right="30.0" top="10.0" />
+                                          <Insets bottom="30.0" left="30.0" right="30.0" top="20.0" />
                                        </BorderPane.margin>
                                     </Label>
                                  </center>
                                  <top>
-                                    <Button fx:id="berechneGesamteMieteinnahmenButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="244.0" text="Berechne gesamte Monatsmieteinnahmen" BorderPane.alignment="CENTER">
+                                    <Button fx:id="berechneGesamteMieteinnahmenButton" mnemonicParsing="false" onAction="#handleGesamteMieteinnahnenBerechnung" prefHeight="40.0" prefWidth="244.0" text="Berechne gesamte Monatsmieteinnahmen" BorderPane.alignment="CENTER">
                                        <BorderPane.margin>
                                           <Insets top="150.0" />
                                        </BorderPane.margin>

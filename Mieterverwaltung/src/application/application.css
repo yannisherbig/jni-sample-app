@@ -19,3 +19,7 @@
 	-fx-font-weight: bold;
 	-fx-background-color: #ffffff;
 }
+
+#gesamteMieteinnahmenLabel {
+	-fx-text-fill: #ffd700;
+}
