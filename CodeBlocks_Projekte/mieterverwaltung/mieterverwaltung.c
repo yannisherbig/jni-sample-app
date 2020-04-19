@@ -5,10 +5,7 @@
 #include <stdlib.h>     // For rand()
 #include <windows.h>    // For sleeping (on windows)
 
-jdouble stromzaehlerWertInKWh = 0;
-jint wasserverbrauchInKubikM = 0;
-
-unsigned int numOfMillisecondsToSleepFor = 3000;
+unsigned int numOfMillisecondsToSleepFor = 2000;
 
 
 // Implementation of the native method berechneKautionsKosten()
@@ -23,11 +20,8 @@ JNIEXPORT float JNICALL Java_BasisControl_berechneKautionsKosten(JNIEnv *env, jo
  * Signature: ()D
  */
 JNIEXPORT jdouble JNICALL Java_BasisControl_holeStromzaehlerStandInKWh(JNIEnv *env, jobject thisObj){
-    srand(time(NULL));   // Initialization, should only be called once.
-    //stromzaehlerWertInKWh += rand() % 10;
-    double max = 10.0;
-    stromzaehlerWertInKWh += (double) rand() / (double)(RAND_MAX / max);
-    return stromzaehlerWertInKWh;
+    srand(time(NULL));
+    return ((double) rand() / (RAND_MAX)) * 10;
 }
 
 /*
@@ -36,9 +30,8 @@ JNIEXPORT jdouble JNICALL Java_BasisControl_holeStromzaehlerStandInKWh(JNIEnv *e
  * Signature: ()D
  */
 JNIEXPORT jdouble JNICALL Java_BasisControl_holeWasserverbrauchInKubikM(JNIEnv *env, jobject thisObj){
-    srand(time(NULL));   // Initialization, should only be called once.
-    wasserverbrauchInKubikM += rand() % 10;
-    return wasserverbrauchInKubikM;
+    srand(time(NULL));
+    return ((double) rand() / (RAND_MAX)) * 10;
 }
 
 /*
