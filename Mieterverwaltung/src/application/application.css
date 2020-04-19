@@ -1,0 +1,21 @@
+#softwareLabel {
+	-fx-font-size: 14;
+	-fx-font-weight: bold;
+}
+
+#softwareLabelCopy {
+	-fx-font-size: 14;
+	-fx-font-weight: bold;
+}
+
+#neueMietobjekteLabel {
+	-fx-font-size: 18;
+	-fx-font-weight: bold;
+	-fx-background-color: #ffffff;
+}
+
+#neueMieterLabel {
+	-fx-font-size: 18;
+	-fx-font-weight: bold;
+	-fx-background-color: #ffffff;
+}

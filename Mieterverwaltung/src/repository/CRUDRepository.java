@@ -1,3 +1,4 @@
+package repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -6,6 +7,8 @@ import java.sql.Statement;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import model.Mieter;
+import model.Mietobjekt;
 
 public class CRUDRepository {
 	
@@ -33,13 +36,31 @@ public class CRUDRepository {
 	private final String selectMieterIDByName = "SELECT mieterID FROM mieter WHERE name LIKE '?'";
 	private final String findMieterByID = "SELECT * FROM mieter WHERE mieterID = ?";
 	
+	private final String insertIntoMietobjektSQL = "INSERT INTO mietobjekt(flaecheInQuadratmetern,monatsmieteInEuro,baujahr,lage) VALUES(?,?,?,?)";	
+	private final String updateMietobjektSQL = "UPDATE mietobjekt SET flaecheInQuadratmetern = ?, monatsmieteInEuro = ?, baujahr = ?, lage = ? WHERE mietobjektID = ?";
+	private final String deleteMietobjektSQL = "DELETE FROM mietobjekt WHERE mietobjektID = ?";
+	private final String selectAlleMietobjekteSQL = "SELECT * FROM mietobjekt";
+	private final String findMietobjektByID = "SELECT * FROM mietobjekt WHERE mietobjektID = ?";
+	
+	private static CRUDRepository instance;
+	
+	
+	private CRUDRepository() { }
+
+	//Rückgabe der eigenen Instanz (falls keine existiert, dann erstelle eine und gebe diese zurück)
+	//this. nicht möglich, da vom Typ static 
+	public static CRUDRepository getInstance() {
+		if(instance == null) {
+			instance = new CRUDRepository();
+		}
+		return instance;
+	}
 	
 	private static Connection connect() {
         Connection conn = null;
         try {
 			conn = DBSingletonConnection.getConnection();
 		} catch (Exception e) {
-			e.printStackTrace();
 			System.out.println(e.getMessage());
 		}
         return conn;
@@ -54,13 +75,12 @@ public class CRUDRepository {
 	        stmt.execute(createMietobjektTableSQL);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
-			e.printStackTrace();
 		}        
     }
 	
 	public long insertIntoMieter(String name, String vorname, int alter, int telefonnummer, long mietobjektID) throws SQLException{
         Connection conn = connect();
-        PreparedStatement pstmt = conn.prepareStatement(insertIntoMieterSQL);
+        PreparedStatement pstmt = conn.prepareStatement(insertIntoMieterSQL, Statement.RETURN_GENERATED_KEYS);
         pstmt.setString(1, name);
         pstmt.setString(2, vorname);
         pstmt.setInt(3, alter);
@@ -88,21 +108,21 @@ public class CRUDRepository {
         pstmt.executeUpdate();
 	}
 	
-	public void deleteMieter(int mieterID) throws SQLException{		 
+	public void deleteMieter(long mieterID) throws SQLException{		 
         Connection conn = connect();
         PreparedStatement pstmt = conn.prepareStatement(deleteMieterSQL);
         pstmt.setLong(1, mieterID);
         pstmt.executeUpdate();
 	}
 		
-	public void selectAlleMieterTest() throws SQLException{	       
-		Connection conn = connect();
-        Statement stmt  = conn.createStatement();
-        ResultSet rs    = stmt.executeQuery(selectAlleMieterSQL);      
-	    while (rs.next()) {
-	    	System.out.println(rs.getString("name"));
-	    }
-    }
+//	public void selectAlleMieterTest() throws SQLException{	       
+//		Connection conn = connect();
+//        Statement stmt  = conn.createStatement();
+//        ResultSet rs    = stmt.executeQuery(selectAlleMieterSQL);      
+//	    while (rs.next()) {
+//	    	System.out.println(rs.getString("name"));
+//	    }
+//    }
 	
 	public ObservableList<Mieter> selectAlleMieter() throws SQLException{ 
 		ObservableList<Mieter> mieterListe = FXCollections.observableArrayList();
@@ -130,7 +150,7 @@ public class CRUDRepository {
 	    return id;
     }
 	
-	private Mieter findMieterByID(int mieterID) throws SQLException{
+	public Mieter findMieterByID(int mieterID) throws SQLException{
 		Connection conn = connect();
 		PreparedStatement pstmt = conn.prepareStatement(findMieterByID);
 		pstmt.setInt(1, mieterID);
@@ -141,6 +161,73 @@ public class CRUDRepository {
 	    			rs.getString("vorname"), rs.getInt("alter"), 
 	    			rs.getInt("telefonnummer"), 
 	    			rs.getInt("mietobjektID"));
+	    }
+	    return m;
+	}
+	
+	
+	public long insertIntoMietobjekt(int flaecheInQuadratmetern, double monatsmieteInEuro, 
+			int baujahr, String lage) throws SQLException{
+        Connection conn = connect();
+        PreparedStatement pstmt = conn.prepareStatement(insertIntoMietobjektSQL, Statement.RETURN_GENERATED_KEYS);
+        pstmt.setInt(1, flaecheInQuadratmetern);
+        pstmt.setDouble(2, monatsmieteInEuro);
+        pstmt.setInt(3, baujahr);
+        pstmt.setString(4, lage);
+        pstmt.executeUpdate();
+        ResultSet generatedKeys = pstmt.getGeneratedKeys();
+        long id = -1;
+        if (generatedKeys.next()) {
+            id = generatedKeys.getLong(1);
+        } else {
+            throw new SQLException("Erstellung des Mietobjekts fehlgeschlagen");
+        }
+        return id;
+	}
+	
+	public void updateMietobjekt(int flaecheInQuadratmetern, double monatsmieteInEuro, int baujahr,
+			String lage) throws SQLException{		
+		Connection conn = connect();
+        PreparedStatement pstmt = conn.prepareStatement(updateMietobjektSQL);
+        pstmt.setInt(1, flaecheInQuadratmetern);
+        pstmt.setDouble(2, monatsmieteInEuro);
+        pstmt.setInt(3, baujahr);
+        pstmt.setString(4, lage);
+        pstmt.executeUpdate();
+	}
+	
+	public void deleteMietobjekt(long mietobjektID) throws SQLException{		 
+        Connection conn = connect();
+        PreparedStatement pstmt = conn.prepareStatement(deleteMietobjektSQL);
+        pstmt.setLong(1, mietobjektID);
+        pstmt.executeUpdate();
+	}
+		
+	public ObservableList<Mietobjekt> selectAlleMietobjekte() throws SQLException{ 
+		ObservableList<Mietobjekt> mietobjekteListe = FXCollections.observableArrayList();
+		Connection conn = connect();
+        Statement stmt  = conn.createStatement();
+        ResultSet rs    = stmt.executeQuery(selectAlleMietobjekteSQL);
+	    while (rs.next()) {	    	
+	    	mietobjekteListe.add(new Mietobjekt(rs.getInt("mietobjektID"),
+	    				rs.getInt("flaecheInQuadratmetern"),
+	                       rs.getDouble("monatsmieteInEuro"),
+	                       rs.getInt("baujahr"), 
+	                       rs.getString("lage")));
+	    }
+	    return mietobjekteListe;
+    }
+	
+	public Mietobjekt findMietobjektByID(long mietobjektID) throws SQLException{
+		Connection conn = connect();
+		PreparedStatement pstmt = conn.prepareStatement(findMietobjektByID);
+		pstmt.setLong(1, mietobjektID);
+		ResultSet rs = pstmt.executeQuery();
+		Mietobjekt m = null;
+	    if(rs.next()){
+	    	m = new Mietobjekt(rs.getInt("mietobjektID"), rs.getInt("flaecheInQuadratmetern"), 
+	    			rs.getDouble("monatsmieteInEuro"), rs.getInt("baujahr"), 
+	    			rs.getString("lage"));
 	    }
 	    return m;
 	}
