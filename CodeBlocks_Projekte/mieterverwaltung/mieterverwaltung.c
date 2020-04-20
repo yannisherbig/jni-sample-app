@@ -25,7 +25,6 @@ JNIEXPORT jdouble JNICALL Java_application_MainController_holeAktuellenStromverb
          srand(time(NULL));
          randomInitHasBeenCalled = 1;
     }
-    printf("%f", ((double) rand() / (RAND_MAX)) * 10);
     return ((double) rand() / (RAND_MAX)) * 10;
 }
 
@@ -140,4 +139,3 @@ JNIEXPORT void JNICALL Java_application_MainController_erstelleMietobjektObjekt(
    // Calling back callback method with created Mietobjekt-Objekt:
    (*env)->CallVoidMethod(env, thisObj, methodToCallBack, newObj);
 }
-

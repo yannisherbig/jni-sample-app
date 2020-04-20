@@ -129,7 +129,7 @@ public class MainController implements Initializable {
 			long generatedMietobjektID = repo.insertIntoMietobjekt(flaecheInQuadratmetern, monatsmieteInEuro, baujahr, lage);
 			
 			// Nativer Aufruf mit Callback-Funktion:
-			erstelleMietobjektObjekt(generatedMietobjektID, flaecheInQuadratmetern, monatsmieteInEuro, baujahr, lage, "afterMietobjektCreationCallback");
+			new Thread(() -> erstelleMietobjektObjekt(generatedMietobjektID, flaecheInQuadratmetern, monatsmieteInEuro, baujahr, lage, "afterMietobjektCreationCallback")).start();
 			System.out.println("Who's quicker?");
 		} catch (Exception e) {
 			new Alert(AlertType.WARNING, "Mietobjekt-Erstellung fehlgeschlagen: " + e.getMessage(), ButtonType.OK).show();
@@ -176,14 +176,16 @@ public class MainController implements Initializable {
 			if(mietobjekt != null)
 				mieteinnahmenListe.add(mietobjekt.getMonatsmieteInEuro());
 		}
-		berechneMieteinnahmenGesamtInEuro(mieteinnahmenListe.stream().mapToDouble(i -> i).toArray(), "gesamteMieteinnahmenCallback");
+		new Thread(() -> berechneMieteinnahmenGesamtInEuro(mieteinnahmenListe.stream().mapToDouble(i -> i).toArray(), "gesamteMieteinnahmenCallback")).start();
 		System.out.println("Who's quicker?"); // Dies sollte nach vor der Ausgabe des Ergebnis des native-Aufruf in der Konsole erscheinen
 	}
 	
 	// Callback-Method
 	private void gesamteMieteinnahmenCallback(double einnahmen) {
-		System.out.println("Einnahmen: " + einnahmen);
-		gesamteMieteinnahmenLabel.setText(Double.toString(einnahmen) + "€");
+		Platform.runLater(() -> {
+			System.out.println("Einnahmen: " + einnahmen);
+			gesamteMieteinnahmenLabel.setText(Double.toString(einnahmen) + "€");
+		});
 	}
 	
 	@SuppressWarnings("unchecked")
