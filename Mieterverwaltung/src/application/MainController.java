@@ -28,6 +28,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import model.Mieter;
 import model.Mietobjekt;
@@ -111,9 +112,11 @@ public class MainController implements Initializable {
 			Mieter neuerMieter = erstelleMieterObjekt(generatedMieterID, name, vorname, alter, telefonnummer, mietobjektID);
 			mieterListe.add(neuerMieter);
 		} catch (Exception e) {
-			new Alert(AlertType.WARNING, 
+			Alert alert = new Alert(AlertType.WARNING, 
                     "Mieter-Erstellung fehlgeschlagen: " + e.getMessage(), 
-                    ButtonType.OK).show();
+                    ButtonType.OK);
+			alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+			alert.show();
 		}
 	}
 	
@@ -132,8 +135,9 @@ public class MainController implements Initializable {
 			new Thread(() -> erstelleMietobjektObjekt(generatedMietobjektID, flaecheInQuadratmetern, monatsmieteInEuro, baujahr, lage, "afterMietobjektCreationCallback")).start();
 			System.out.println("Who's quicker?");
 		} catch (Exception e) {
-			new Alert(AlertType.WARNING, "Mietobjekt-Erstellung fehlgeschlagen: " + e.getMessage(), ButtonType.OK).show();
-			System.out.println(e.getMessage());
+			Alert alert = new Alert(AlertType.WARNING, "Mietobjekt-Erstellung fehlgeschlagen: " + e.getMessage(), ButtonType.OK);
+			alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+			alert.show();
 		}
 	}
 	
