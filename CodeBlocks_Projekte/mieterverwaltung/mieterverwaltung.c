@@ -3,11 +3,9 @@
 #include <stdio.h>      // C Standard IO Header
 #include <time.h>       // For srand-init
 #include <stdlib.h>     // For rand()
-#include <windows.h>    // For sleeping (on windows)
+#include <stdbool.h>    // For boolean-type
 
-unsigned int numOfMillisecondsToSleepFor = 2000;
-
-boolean randomInitHasBeenCalled = 0;
+bool randomInitHasBeenCalled = 0;
 
 // Implementation of the native method berechneKautionsKosten()
 JNIEXPORT float JNICALL Java_application_MainController_berechneKautionsKosten(JNIEnv *env, jobject thisObj) {
@@ -48,9 +46,6 @@ JNIEXPORT jdouble JNICALL Java_application_MainController_holeAktuellenWasserver
  * Once the result is determined, calling back the specified callback method and passing it the result of type double as a parameter
  */
 JNIEXPORT void JNICALL Java_application_MainController_berechneMieteinnahmenGesamtInEuro(JNIEnv *env, jobject thisObj, jdoubleArray inJNIArray, jstring methodNameToCallBackTo){
-
-    // Sleeping, to simulate a function call that takes some time to respond
-   Sleep(numOfMillisecondsToSleepFor);
 
    // Step 1: Convert the JNI String (jstring) into C-String (char*)
    const char *inCStr = (*env)->GetStringUTFChars(env, methodNameToCallBackTo, NULL);
@@ -112,8 +107,6 @@ JNIEXPORT jobject JNICALL Java_application_MainController_erstelleMieterObjekt(J
  */
 JNIEXPORT void JNICALL Java_application_MainController_erstelleMietobjektObjekt(JNIEnv *env, jobject thisObj, jlong mietobjektID,
                                                         jint flaecheInQuadratmetern, jdouble monatsmieteInEuro, jint baujahr, jstring lage, jstring methodNameToCallBackTo){
-   // Sleeping, to simulate a function call that takes some time to respond
-   Sleep(numOfMillisecondsToSleepFor);
 
     // Get a class reference for model.Mieter
    jclass cls = (*env)->FindClass(env, "model/Mietobjekt");

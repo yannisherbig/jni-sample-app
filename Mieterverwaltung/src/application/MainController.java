@@ -141,7 +141,7 @@ public class MainController implements Initializable {
 		}
 	}
 	
-	// Callback-Method
+	// Callback-Methode
 	private void afterMietobjektCreationCallback(Mietobjekt m) {
 		mietobjektListe.add(m);
 	}
@@ -181,10 +181,10 @@ public class MainController implements Initializable {
 				mieteinnahmenListe.add(mietobjekt.getMonatsmieteInEuro());
 		}
 		new Thread(() -> berechneMieteinnahmenGesamtInEuro(mieteinnahmenListe.stream().mapToDouble(i -> i).toArray(), "gesamteMieteinnahmenCallback")).start();
-		System.out.println("Who's quicker?"); // Dies sollte nach vor der Ausgabe des Ergebnis des native-Aufruf in der Konsole erscheinen
+		System.out.println("Who's quicker?"); // Dies sollte noch vor der Ausgabe des Ergebnis des native-Aufruf in der Konsole erscheinen
 	}
 	
-	// Callback-Method
+	// Callback-Methode
 	private void gesamteMieteinnahmenCallback(double einnahmen) {
 		Platform.runLater(() -> {
 			System.out.println("Einnahmen: " + einnahmen);
